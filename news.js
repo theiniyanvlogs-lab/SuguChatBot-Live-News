@@ -1,6 +1,6 @@
 /* ==========================================
    SuguChatBot Live News
-   Phase 4 - news.js
+   Phase 5 - news.js
 ========================================== */
 
 const CATEGORY_MAP = {
@@ -10,6 +10,10 @@ const CATEGORY_MAP = {
     "💼 Business": { country: "in", category: "business" },
     "⚽ Sports": { country: "in", category: "sports" }
 };
+
+/* ==========================================
+   Fetch Live News
+========================================== */
 
 async function fetchNews(categoryName = "🇮🇳 India") {
 
@@ -43,7 +47,6 @@ async function fetchNews(categoryName = "🇮🇳 India") {
         displayNews(categoryName, data.results.slice(0, 5));
 
     }
-
     catch (error) {
 
         console.error(error);
@@ -53,6 +56,11 @@ async function fetchNews(categoryName = "🇮🇳 India") {
     }
 
 }
+
+
+/* ==========================================
+   Display News
+========================================== */
 
 function displayNews(category, articles) {
 
@@ -69,25 +77,20 @@ function displayNews(category, articles) {
 
         });
 
-        const safeTitle = (article.title || "")
-            .replace(/'/g, "\\'")
-            .replace(/"/g, "&quot;");
-
-        const safeDescription = (article.description || "")
-            .replace(/'/g, "\\'")
-            .replace(/"/g, "&quot;");
-
         chatArea.innerHTML += `
 
 <div class="chat-message">
 
-    <img src="images/logo.png" class="bot-avatar">
+    <img src="images/logo.png"
+         class="bot-avatar">
 
     <div class="bubble">
 
         <div class="bubble-header">
 
-            <strong>SuguChatBot Live News</strong>
+            <strong>
+                SuguChatBot Live News
+            </strong>
 
             <span>${time}</span>
 
@@ -95,15 +98,29 @@ function displayNews(category, articles) {
 
         <h3>${category}</h3>
 
-        <p><strong>🇬🇧 ${article.title}</strong></p>
+        <p>
 
-        <p>${article.description || ""}</p>
+            <strong>
+
+                🇬🇧 ${article.title}
+
+            </strong>
+
+        </p>
+
+        <p>
+
+            ${article.description || "No description available."}
+
+        </p>
 
         <div class="news-actions">
 
             <button
                 onclick="window.open('${article.link}','_blank')">
+
                 🔗 Read More
+
             </button>
 
             <button
@@ -118,14 +135,17 @@ function displayNews(category, articles) {
 
             </button>
 
-            <button onclick="bookmarkNews()">
+            <button
+                onclick="bookmarkNews()">
+
                 ⭐ Bookmark
+
             </button>
 
             <button
                 onclick='shareArticle(
                     ${JSON.stringify(article.title || "")},
-                    ${JSON.stringify(article.link)}
+                    ${JSON.stringify(article.link || "")}
                 )'>
 
                 📤 Share
@@ -180,18 +200,13 @@ async function shareArticle(title, link) {
     if (navigator.share) {
 
         await navigator.share({
-
-            title: title,
-
+            title,
             url: link
-
         });
 
-    }
+    } else {
 
-    else {
-
-        navigator.clipboard.writeText(link);
+        await navigator.clipboard.writeText(link);
 
         alert("Link copied to clipboard.");
 
@@ -204,7 +219,7 @@ async function shareArticle(title, link) {
    Bookmark (Temporary)
 ========================================== */
 
-function bookmarkNews(){
+function bookmarkNews() {
 
     alert("Bookmark feature coming soon.");
 
@@ -225,6 +240,7 @@ async function translateNews(button, title, description) {
         unescape(encodeURIComponent(title))
     );
 
+    // Check Cache
     const cached = localStorage.getItem(cacheKey);
 
     if (cached) {
@@ -266,19 +282,27 @@ async function translateNews(button, title, description) {
                 messages: [
 
                     {
-
                         role: "system",
 
-                        content:
-`You are an expert Tamil translator.
+                        content: `You are a professional English to Tamil translator.
 
-Translate English news into simple natural Tamil.
+Translate the English title and description into natural Tamil.
+
+IMPORTANT:
 
 Return ONLY valid JSON.
 
+Do NOT use markdown.
+
+Do NOT use \`\`\`json.
+
+Do NOT explain anything.
+
+Example:
+
 {
-"title_ta":"",
-"description_ta":""
+"title_ta":"தமிழ் தலைப்பு",
+"description_ta":"தமிழ் விளக்கம்"
 }`
 
                     },
@@ -287,9 +311,7 @@ Return ONLY valid JSON.
 
                         role: "user",
 
-                        content:
-
-`Title:
+                        content: `Title:
 ${title}
 
 Description:
@@ -311,11 +333,33 @@ ${description}`
 
         const data = await response.json();
 
-        console.log(data);
+        console.log("Groq Response:", data);
 
-        const result = JSON.parse(
-            data.choices[0].message.content
-        );
+        let content = data.choices[0].message.content.trim();
+
+        console.log("Raw Content:", content);
+
+        // Remove markdown if returned
+        content = content
+            .replace(/```json/gi, "")
+            .replace(/```/g, "")
+            .trim();
+
+        // Extract JSON only
+        const start = content.indexOf("{");
+        const end = content.lastIndexOf("}");
+
+        if (start === -1 || end === -1) {
+
+            throw new Error("JSON not found.");
+
+        }
+
+        content = content.substring(start, end + 1);
+
+        console.log("Clean JSON:", content);
+
+        const result = JSON.parse(content);
 
         const html = `
 
@@ -325,11 +369,7 @@ ${description}`
 
 <p>
 
-<strong>
-
-${result.title_ta}
-
-</strong>
+<strong>${result.title_ta}</strong>
 
 </p>
 
@@ -349,7 +389,7 @@ ${result.description_ta}
 
     }
 
-    catch(error){
+    catch (error) {
 
         console.error(error);
 
@@ -359,7 +399,7 @@ ${result.description_ta}
 
         translationArea.innerHTML = `
 
-<p style="color:red;">
+<p style="color:red">
 
 ❌ Translation Failed
 
