@@ -1,182 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SuguChatBot Live News</title>
 
     <link rel="stylesheet" href="style.css">
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <!-- ================= HEADER ================= -->
+        <!-- ================= HEADER ================= -->
 
-    <header>
+        <header>
 
-        <div class="header-left">
+            <div class="header-left">
 
-            <img src="images/logo.png"
-                 class="logo"
-                 alt="Logo">
+                <img src="images/logo.png"
+                    class="logo"
+                    alt="Logo">
 
-            <div>
+                <div>
 
-                <h1>SuguChatBot Live News</h1>
+                    <h1>SuguChatBot Live News</h1>
 
-                <p>English 🇬🇧 | தமிழ் 🇮🇳 | LIVE 24×7</p>
+                    <p>English 🇬🇧 | தமிழ் 🇮🇳 | LIVE 24×7</p>
+
+                </div>
 
             </div>
 
-        </div>
+            <div class="header-right">
 
-        <div class="header-right">
+                <i class="fas fa-search"></i>
 
-            <i class="fas fa-search"></i>
+                <i class="fas fa-bars"></i>
 
-            <i class="fas fa-bars"></i>
+            </div>
 
-        </div>
+        </header>
 
-    </header>
+        <!-- ================= SEARCH ================= -->
 
-    <!-- ================= SEARCH ================= -->
+        <section class="search-box">
 
-    <section class="search-box">
-
-        <input
+            <input
                 type="text"
                 id="searchInput"
                 placeholder="🔍 Search News...">
 
-    </section>
+        </section>
 
-    <!-- ================= CATEGORY ================= -->
+        <!-- ================= CATEGORY ================= -->
 
-    <section class="categories">
+        <section class="categories">
 
-        <button class="category active">🇮🇳 India</button>
+            <button class="category active">🇮🇳 India</button>
 
-        <button class="category">🌍 World</button>
+            <button class="category">🌍 World</button>
 
-        <button class="category">🏛 Tamil Nadu</button>
+            <button class="category">🏛 Tamil Nadu</button>
 
-        <button class="category">💼 Business</button>
+            <button class="category">💼 Business</button>
 
-        <button class="category">⚽ Sports</button>
+            <button class="category">⚽ Sports</button>
 
-    </section>
+        </section>
 
-    <!-- ================= CHAT ================= -->
+        <!-- ================= CHAT AREA ================= -->
 
-    <main id="chatArea">
+        <main id="chatArea">
 
-        <!-- Welcome Message -->
+            <div class="chat-message">
 
-        <div class="chat-message">
+                <img src="images/logo.png"
+                    class="bot-avatar"
+                    alt="Bot">
 
-            <img src="images/logo.png"
-                 class="bot-avatar"
-                 alt="Bot">
+                <div class="bubble">
 
-            <div class="bubble">
+                    <div class="bubble-header">
 
-                <div class="bubble-header">
+                        <strong>SuguChatBot Live News</strong>
 
-                    <strong>SuguChatBot Live News</strong>
+                        <span>Loading...</span>
 
-                    <span>09:15 AM</span>
+                    </div>
+
+                    <h3>🤖 Loading Live News...</h3>
+
+                    <p>Please wait while we fetch the latest headlines.</p>
 
                 </div>
 
-                <h3>👋 Welcome!</h3>
-
-                <p>
-
-                    Hello! I'm <strong>SuguChatBot AI</strong>.
-
-                    <br><br>
-
-                    I bring you the latest news in:
-
-                </p>
-
-                <ul>
-
-                    <li>🇮🇳 India</li>
-
-                    <li>🌍 World</li>
-
-                    <li>🏛 Tamil Nadu</li>
-
-                    <li>💼 Business</li>
-
-                    <li>⚽ Sports</li>
-
-                </ul>
-
-                <p>
-
-                    Tap any category above to begin reading.
-
-                </p>
-
             </div>
 
-        </div>
+        </main>
 
-    </main>
+        <!-- ================= FOOTER ================= -->
 
-    <!-- ================= BOTTOM NAVIGATION ================= -->
+        <footer>
 
-    <footer>
+            <button>
 
-        <button>
+                <i class="fas fa-house"></i>
 
-            <i class="fas fa-house"></i>
+                <span>Home</span>
 
-            <span>Home</span>
+            </button>
 
-        </button>
+            <button>
 
-        <button>
+                <i class="far fa-bookmark"></i>
 
-            <i class="far fa-bookmark"></i>
+                <span>Saved</span>
 
-            <span>Saved</span>
+            </button>
 
-        </button>
+            <button id="darkModeBtn">
 
-        <button id="darkModeBtn">
+                <i class="fas fa-moon"></i>
 
-            <i class="fas fa-moon"></i>
+                <span>Dark</span>
 
-            <span>Dark</span>
+            </button>
 
-        </button>
+            <button>
 
-        <button>
+                <i class="fas fa-gear"></i>
 
-            <i class="fas fa-gear"></i>
+                <span>Settings</span>
 
-            <span>Settings</span>
+            </button>
 
-        </button>
+        </footer>
 
-    </footer>
+    </div>
 
-</div>
+    <!-- ================= JAVASCRIPT ================= -->
 
-<script src="script.js"></script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+
+    <!-- News API -->
+    <script src="news.js"></script>
+
+    <!-- Main Script -->
+    <script src="script.js"></script>
 
 </body>
+
 </html>
