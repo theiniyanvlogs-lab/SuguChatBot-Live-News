@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuguChatBot Live News</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="header-left">
+
+            <img src="images/logo.png"
+                 class="logo"
+                 alt="Logo">
+
+            <div>
+
+                <h1>SuguChatBot Live News</h1>
+
+                <p>English 🇬🇧 | தமிழ் 🇮🇳 | LIVE 24×7</p>
+
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <i class="fas fa-search"></i>
+
+            <i class="fas fa-bars"></i>
+
+        </div>
+
+    </header>
+
+    <!-- ================= SEARCH ================= -->
+
+    <section class="search-box">
+
+        <input
+                type="text"
+                id="searchInput"
+                placeholder="🔍 Search News...">
+
+    </section>
+
+    <!-- ================= CATEGORY ================= -->
+
+    <section class="categories">
+
+        <button class="category active">🇮🇳 India</button>
+
+        <button class="category">🌍 World</button>
+
+        <button class="category">🏛 Tamil Nadu</button>
+
+        <button class="category">💼 Business</button>
+
+        <button class="category">⚽ Sports</button>
+
+    </section>
+
+    <!-- ================= CHAT ================= -->
+
+    <main id="chatArea">
+
+        <!-- Welcome Message -->
+
+        <div class="chat-message">
+
+            <img src="images/logo.png"
+                 class="bot-avatar"
+                 alt="Bot">
+
+            <div class="bubble">
+
+                <div class="bubble-header">
+
+                    <strong>SuguChatBot Live News</strong>
+
+                    <span>09:15 AM</span>
+
+                </div>
+
+                <h3>👋 Welcome!</h3>
+
+                <p>
+
+                    Hello! I'm <strong>SuguChatBot AI</strong>.
+
+                    <br><br>
+
+                    I bring you the latest news in:
+
+                </p>
+
+                <ul>
+
+                    <li>🇮🇳 India</li>
+
+                    <li>🌍 World</li>
+
+                    <li>🏛 Tamil Nadu</li>
+
+                    <li>💼 Business</li>
+
+                    <li>⚽ Sports</li>
+
+                </ul>
+
+                <p>
+
+                    Tap any category above to begin reading.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ================= BOTTOM NAVIGATION ================= -->
+
+    <footer>
+
+        <button>
+
+            <i class="fas fa-house"></i>
+
+            <span>Home</span>
+
+        </button>
+
+        <button>
+
+            <i class="far fa-bookmark"></i>
+
+            <span>Saved</span>
+
+        </button>
+
+        <button id="darkModeBtn">
+
+            <i class="fas fa-moon"></i>
+
+            <span>Dark</span>
+
+        </button>
+
+        <button>
+
+            <i class="fas fa-gear"></i>
+
+            <span>Settings</span>
+
+        </button>
+
+    </footer>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
