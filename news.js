@@ -104,12 +104,7 @@ function displayNews(category, articles) {
 
             </button>
 
-            <button
-                onclick="bookmarkNews()">
-
-                ⭐ Bookmark
-
-            </button>
+            
 
             <button
                 onclick='shareArticle(
