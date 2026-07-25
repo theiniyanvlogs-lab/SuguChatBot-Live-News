@@ -1,6 +1,6 @@
 /* ==========================================
    SuguChatBot Live News
-   Phase 2 - news.js
+   Phase 3 - news.js
 ========================================== */
 
 const CATEGORY_MAP = {
@@ -68,41 +68,57 @@ function displayNews(category, articles) {
 
 <div class="chat-message">
 
-<img src="images/logo.png" class="bot-avatar">
+    <img src="images/logo.png" class="bot-avatar">
 
-<div class="bubble">
+    <div class="bubble">
 
-<div class="bubble-header">
+        <div class="bubble-header">
 
-<strong>SuguChatBot Live News</strong>
+            <strong>SuguChatBot Live News</strong>
 
-<span>${time}</span>
+            <span>${time}</span>
 
-</div>
+        </div>
 
-<h3>${category}</h3>
+        <h3>${category}</h3>
 
-<p><strong>${article.title}</strong></p>
+        <p><strong>🇬🇧 ${article.title}</strong></p>
 
-<p>${article.description ?? ""}</p>
+        <p>${article.description ?? ""}</p>
 
-<div class="news-actions">
+        <div class="news-actions">
 
-<button onclick="window.open('${article.link}','_blank')">
-🔗 Read More
-</button>
+            <button onclick="window.open('${article.link}','_blank')">
+                🔗 Read More
+            </button>
 
-<button onclick="bookmarkNews()">
-⭐ Bookmark
-</button>
+            <button
+                class="translate-btn"
+                onclick="translateNews(
+                    this,
+                    \`${(article.title || "").replace(/`/g, "\\`")}\`,
+                    \`${(article.description || "").replace(/`/g, "\\`")}\`
+                )">
 
-<button onclick="shareArticle('${article.title}','${article.link}')">
-📤 Share
-</button>
+                🌐 Want Tamil Translation 🇮🇳
 
-</div>
+            </button>
 
-</div>
+            <button onclick="bookmarkNews()">
+                ⭐ Bookmark
+            </button>
+
+            <button onclick="shareArticle('${(article.title || "").replace(/'/g, "\\'")}','${article.link}')">
+                📤 Share
+            </button>
+
+        </div>
+
+        <!-- Tamil translation will appear here -->
+
+        <div class="translation-area"></div>
+
+    </div>
 
 </div>
 
@@ -118,13 +134,13 @@ function showMessage(message) {
 
 <div class="chat-message">
 
-<img src="images/logo.png" class="bot-avatar">
+    <img src="images/logo.png" class="bot-avatar">
 
-<div class="bubble">
+    <div class="bubble">
 
-<h3>${message}</h3>
+        <h3>${message}</h3>
 
-</div>
+    </div>
 
 </div>
 
@@ -137,7 +153,7 @@ async function shareArticle(title, link) {
     if (navigator.share) {
 
         await navigator.share({
-            title: title,
+            title,
             url: link
         });
 
@@ -148,5 +164,34 @@ async function shareArticle(title, link) {
         alert("Link copied to clipboard.");
 
     }
+
+}
+
+/* ==========================================
+   Placeholder
+   Grok API integration comes next
+========================================== */
+
+async function translateNews(button, title, description) {
+
+    const translationArea = button
+        .closest(".bubble")
+        .querySelector(".translation-area");
+
+    button.disabled = true;
+    button.innerHTML = "⏳ Translating...";
+
+    // Temporary demo
+    translationArea.innerHTML = `
+
+<hr>
+
+<h4>🇮🇳 தமிழ்</h4>
+
+<p>Grok translation will appear here.</p>
+
+`;
+
+    button.innerHTML = "✅ Tamil Translation Ready";
 
 }
