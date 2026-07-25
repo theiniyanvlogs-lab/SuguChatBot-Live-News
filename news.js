@@ -1,6 +1,6 @@
 /* ==========================================
    SuguChatBot Live News
-   Phase 3 - news.js
+   Phase 4 - news.js
 ========================================== */
 
 const CATEGORY_MAP = {
@@ -34,14 +34,17 @@ async function fetchNews(categoryName = "🇮🇳 India") {
 
         if (!data.results || data.results.length === 0) {
 
-            showMessage("No news available.");
+            showMessage("No live news available.");
 
             return;
+
         }
 
         displayNews(categoryName, data.results.slice(0, 5));
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(error);
 
@@ -60,9 +63,19 @@ function displayNews(category, articles) {
     articles.forEach(article => {
 
         const time = new Date().toLocaleTimeString([], {
+
             hour: "2-digit",
             minute: "2-digit"
+
         });
+
+        const safeTitle = (article.title || "")
+            .replace(/'/g, "\\'")
+            .replace(/"/g, "&quot;");
+
+        const safeDescription = (article.description || "")
+            .replace(/'/g, "\\'")
+            .replace(/"/g, "&quot;");
 
         chatArea.innerHTML += `
 
@@ -84,21 +97,22 @@ function displayNews(category, articles) {
 
         <p><strong>🇬🇧 ${article.title}</strong></p>
 
-        <p>${article.description ?? ""}</p>
+        <p>${article.description || ""}</p>
 
         <div class="news-actions">
 
-            <button onclick="window.open('${article.link}','_blank')">
+            <button
+                onclick="window.open('${article.link}','_blank')">
                 🔗 Read More
             </button>
 
             <button
                 class="translate-btn"
-                onclick="translateNews(
+                onclick='translateNews(
                     this,
-                    \`${(article.title || "").replace(/`/g, "\\`")}\`,
-                    \`${(article.description || "").replace(/`/g, "\\`")}\`
-                )">
+                    ${JSON.stringify(article.title || "")},
+                    ${JSON.stringify(article.description || "")}
+                )'>
 
                 🌐 Want Tamil Translation 🇮🇳
 
@@ -108,13 +122,17 @@ function displayNews(category, articles) {
                 ⭐ Bookmark
             </button>
 
-            <button onclick="shareArticle('${(article.title || "").replace(/'/g, "\\'")}','${article.link}')">
+            <button
+                onclick='shareArticle(
+                    ${JSON.stringify(article.title || "")},
+                    ${JSON.stringify(article.link)}
+                )'>
+
                 📤 Share
+
             </button>
 
         </div>
-
-        <!-- Tamil translation will appear here -->
 
         <div class="translation-area"></div>
 
@@ -127,6 +145,10 @@ function displayNews(category, articles) {
     });
 
 }
+
+/* ==========================================
+   Show Message
+========================================== */
 
 function showMessage(message) {
 
@@ -148,16 +170,26 @@ function showMessage(message) {
 
 }
 
+
+/* ==========================================
+   Share News
+========================================== */
+
 async function shareArticle(title, link) {
 
     if (navigator.share) {
 
         await navigator.share({
-            title,
+
+            title: title,
+
             url: link
+
         });
 
-    } else {
+    }
+
+    else {
 
         navigator.clipboard.writeText(link);
 
@@ -167,9 +199,20 @@ async function shareArticle(title, link) {
 
 }
 
+
 /* ==========================================
-   Placeholder
-   Grok API integration comes next
+   Bookmark (Temporary)
+========================================== */
+
+function bookmarkNews(){
+
+    alert("Bookmark feature coming soon.");
+
+}
+
+
+/* ==========================================
+   Translate News using Groq
 ========================================== */
 
 async function translateNews(button, title, description) {
@@ -178,20 +221,153 @@ async function translateNews(button, title, description) {
         .closest(".bubble")
         .querySelector(".translation-area");
 
+    const cacheKey = "ta_" + btoa(
+        unescape(encodeURIComponent(title))
+    );
+
+    const cached = localStorage.getItem(cacheKey);
+
+    if (cached) {
+
+        translationArea.innerHTML = cached;
+
+        button.innerHTML = "✅ தமிழில் மொழிபெயர்க்கப்பட்டது";
+
+        button.disabled = true;
+
+        return;
+
+    }
+
     button.disabled = true;
+
     button.innerHTML = "⏳ Translating...";
 
-    // Temporary demo
-    translationArea.innerHTML = `
+    try {
+
+        const response = await fetch(CONFIG.GROQ_URL, {
+
+            method: "POST",
+
+            headers: {
+
+                "Authorization": `Bearer ${CONFIG.GROQ_API_KEY}`,
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                model: CONFIG.GROQ_MODEL,
+
+                temperature: 0,
+
+                messages: [
+
+                    {
+
+                        role: "system",
+
+                        content:
+`You are an expert Tamil translator.
+
+Translate English news into simple natural Tamil.
+
+Return ONLY valid JSON.
+
+{
+"title_ta":"",
+"description_ta":""
+}`
+
+                    },
+
+                    {
+
+                        role: "user",
+
+                        content:
+
+`Title:
+${title}
+
+Description:
+${description}`
+
+                    }
+
+                ]
+
+            })
+
+        });
+
+        if (!response.ok) {
+
+            throw new Error("Groq API Error");
+
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+
+        const result = JSON.parse(
+            data.choices[0].message.content
+        );
+
+        const html = `
 
 <hr>
 
-<h4>🇮🇳 தமிழ்</h4>
+<h4>🇮🇳 தமிழ் மொழிபெயர்ப்பு</h4>
 
-<p>Grok translation will appear here.</p>
+<p>
+
+<strong>
+
+${result.title_ta}
+
+</strong>
+
+</p>
+
+<p>
+
+${result.description_ta}
+
+</p>
 
 `;
 
-    button.innerHTML = "✅ Tamil Translation Ready";
+        translationArea.innerHTML = html;
+
+        localStorage.setItem(cacheKey, html);
+
+        button.innerHTML = "✅ தமிழில் மொழிபெயர்க்கப்பட்டது";
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        button.disabled = false;
+
+        button.innerHTML = "🌐 Want Tamil Translation 🇮🇳";
+
+        translationArea.innerHTML = `
+
+<p style="color:red;">
+
+❌ Translation Failed
+
+</p>
+
+`;
+
+    }
 
 }
+
