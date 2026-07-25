@@ -175,12 +175,3 @@ async function shareArticle(title, link) {
 
 }
 
-/* ==========================================
-   Bookmark (Temporary)
-========================================== */
-
-function bookmarkNews() {
-
-    alert("Bookmark feature coming soon.");
-
-}
